@@ -1,6 +1,27 @@
 # Arch Install Documentation
 ### Justin McNiel
 
+Using VMware Workstation Pro
+
+1. Created VM
+- 20GB Hard Drive
+- 2GB Ram
+- 4 Cores (1 Logical Procesor each, total 4 Logical Processors)
+- CD/DVD drive
+- NAT Networking
+- Sound Card/Display - auto-set to "Auto detect"
+- USB Controller/Printer - auto-set to "Present"
+- Custom VM
+2. Mount Arch installer to CD/DVD drive
+- Double Click CD/DVD (next to the VM)
+- Select "Use ISO image file"
+- Select the Arch Installation ISO
+3. Close VMware
+4. Edit Configuration to allow for UEFI boot mode/make UEFI the default
+- Navigate to the folder where the VM is being stored
+- Select the VM configuration file (the \*.vmx file)
+
+
 
 
 `Code`
