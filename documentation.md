@@ -11,6 +11,8 @@ Using VMware Workstation Pro
     - NAT Networking
     - Sound Card/Display - auto-set to "Auto detect"
     - USB Controller/Printer - auto-set to "Present"
+    - LSI Logic for the disks
+        - SCSI type disk
     - Custom VM
 2. Mount Arch installer to CD/DVD drive
     - Double Click CD/DVD (next to the VM)
@@ -24,8 +26,11 @@ Using VMware Workstation Pro
     - Insert `firmware="efi"` as the second line in the file
     - Save
 5. Re-Open VMware and start the VM
-
-
+##VMware failed to Open the VM
+- I edited the wrong file
+    - Erase the VM and start from scratch
+- This time it worked
+# Begin Installation of Arch
 
 
 `Code`
