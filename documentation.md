@@ -20,6 +20,10 @@ Using VMware Workstation Pro
 4. Edit Configuration to allow for UEFI boot mode/make UEFI the default
     - Navigate to the folder where the VM is being stored
     - Select the VM configuration file (the \*.vmx file)
+    - Open it with text editor of your choice (I used notepad)
+    - Insert `firmware="efi"` as the second line in the file
+    - Save
+5. Re-Open VMware and start the VM
 
 
 
