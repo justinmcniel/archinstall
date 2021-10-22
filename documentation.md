@@ -49,7 +49,12 @@ Using VMware Workstation Pro
         - Check that the date and time are correct
         ## The date was correct, and the time was off by 5 hours, this is consistent with how linux/windows dual boots work with grub... so I ignored it for now
 11. Partition the disks
-
+    - `lsblk`
+        - Show the block devices to identify the disk we will be installing to
+        - Disk we selected was labled as `sda`
+    - Using `parted` for modifying the partition tables
+        - First command was `parted /dev/sda`
+    - Started by using `help` to see the commands
 
 
 
