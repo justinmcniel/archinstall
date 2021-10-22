@@ -13,13 +13,13 @@ Using VMware Workstation Pro
     - USB Controller/Printer - auto-set to "Present"
     - Custom VM
 2. Mount Arch installer to CD/DVD drive
-- Double Click CD/DVD (next to the VM)
-- Select "Use ISO image file"
-- Select the Arch Installation ISO
+    - Double Click CD/DVD (next to the VM)
+    - Select "Use ISO image file"
+    - Select the Arch Installation ISO
 3. Close VMware
 4. Edit Configuration to allow for UEFI boot mode/make UEFI the default
-- Navigate to the folder where the VM is being stored
-- Select the VM configuration file (the \*.vmx file)
+    - Navigate to the folder where the VM is being stored
+    - Select the VM configuration file (the \*.vmx file)
 
 
 
