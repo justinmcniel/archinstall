@@ -4,14 +4,14 @@
 Using VMware Workstation Pro
 
 1. Created VM
-- 20GB Hard Drive
-- 2GB Ram
-- 4 Cores (1 Logical Procesor each, total 4 Logical Processors)
-- CD/DVD drive
-- NAT Networking
-- Sound Card/Display - auto-set to "Auto detect"
-- USB Controller/Printer - auto-set to "Present"
-- Custom VM
+    - 20GB Hard Drive
+    - 2GB Ram
+    - 4 Cores (1 Logical Procesor each, total 4 Logical Processors)
+    - CD/DVD drive
+    - NAT Networking
+    - Sound Card/Display - auto-set to "Auto detect"
+    - USB Controller/Printer - auto-set to "Present"
+    - Custom VM
 2. Mount Arch installer to CD/DVD drive
 - Double Click CD/DVD (next to the VM)
 - Select "Use ISO image file"
