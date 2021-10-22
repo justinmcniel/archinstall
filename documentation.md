@@ -30,7 +30,7 @@ Using VMware Workstation Pro
 - I edited the wrong file
     - Erase the VM and start from scratch
 - This time it worked
-# Begin Installation of Arch
+# Begin Formatting the drives
 6. Boot to the Arch installer
 7. Set the console keyboard layout
     - Skipped because the default is EN-US
@@ -55,7 +55,35 @@ Using VMware Workstation Pro
     - Using `parted` for modifying the partition tables
         - First command was `parted /dev/sda`
     - Started by using `help` to see the commands
-
+    - `print`
+        - To show there was no existing partition table
+    - `mktable msdos`
+        - Create a new partition table of type MBR
+    - `mkpart`
+        - "Partition type? primary/extended?" `primary`
+        - "File system type? [ext2]?" `` (just hit enter, efi/EFI was not recognized)
+        - "Start?"  `1MiB`
+        - "End?"  `501MiB` (technically this is bigger than 500MB, but that just gives me a little extra wiggle room)
+    - `print` to make sure that the file system was created right
+    - `mkpart`
+        - "Partition type? primary/extended?" `primary`
+        - "File system type? [ext2]?" `` (just hit enter, efi/EFI was not recognized)
+        - "Start?"  `502MiB`
+        - "End?"  `100%`
+    - `print` to make sure that the file system was created right
+    - `set 1 esp on` to set the esp flag for the EFI partition to on (part of the EFI specification)
+    - `print` to make sure this was done correctly
+    - `quit` to exit the parted interactive console
+    - `lsblk` to verify that the new partitions were created properly
+    - `mkfs.fat -F32 /dev/sda1` to make /dev/sda1 an EFI file system by formatting it to Fat32 (since the esp flag is already on)
+    - `mkfs.ext4 /dev/sda2` to format the system drive to ext4 (for installing arch onto)
+    - `parted /dev/sda print` to check that the partitions are formatted/flagged correctly
+12. Mount the file systems
+    - `mount /dev/sda2 /mnt`
+    - `mount /dev/sda1 /mnt/efi`
+        - mount point did not exist, fixed with `mkdir /mnt/efi` then rerunning the mount command
+# Begin Installation of Arch
+13. 
 
 
 
