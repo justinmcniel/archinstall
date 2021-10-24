@@ -81,22 +81,22 @@ Using VMware Workstation Pro
 12. Mount the file systems
     - `mount /dev/sda2 /mnt`
     - `mount /dev/sda1 /mnt/efi`
-        - mount point did not exist, fixed with `mkdir /mnt/efi` then rerunning the mount command
+        - Mount point did not exist, fixed with `mkdir /mnt/efi` then rerunning the mount command
 # Begin Installation of Arch
 13. Install the "essentials"
     - `pacstrap /mnt base linux linux-firmware`
-    - technically speaking you can ommit the firmware, since it's a VM, but I want to install as if it was on a real machine
+    - Technically speaking you can ommit the firmware, since it's a VM, but I want to install as if it was on a real machine
   1. Install filesystem management things
     - `pacstrap /mnt btrfs-progs dosfstools exfatprogs f2fs-tools e2fsprogs jfsutils nilfs-utils ntfs-3g reiserfsprogs udftools xfsprogs` 
-    - recieved warning about possibly missing firmware for the following modules: `aic94xx` `wd719x` `xhci_pci`
-      - ran `pacstrap /mnt aic94xx wd719x xhci_pci` in an attempt to fix it
-      - targets were not found, will install with `pacman` after using arch-chroot
+    - Recieved warning about possibly missing firmware for the following modules: `aic94xx` `wd719x` `xhci_pci`
+      - Ran `pacstrap /mnt aic94xx wd719x xhci_pci` in an attempt to fix it
+      - Targets were not found, will install with `pacman` after using arch-chroot
   2. Install text editors
     - `pacstrap /mnt nano gedit`
-    - also installed all the dependencies
+    - Also installed all the dependencies
   3. Install networking utilities/software
     - `pacstrap /mnt iputils systemd-resolved systemd-networkd net-tools iproute2 systemd dhcpcd dhclient`
-    - got errors relating to `systemd-resolved` and `systemd-networkd`, rerunning the previous command with those removed
+    - Got errors relating to `systemd-resolved` and `systemd-networkd`, rerunning the previous command with those removed
     - iputils, iproute, and systemd were reinstalled, so removing those too (since they were already installed they were not needed in the first place)
     - `pacstrap /mnt net-tools dhcpcd dhclient`
   4. Install `parted` and documentation tools
@@ -107,12 +107,12 @@ Using VMware Workstation Pro
     - sudo, syslinux, wpa_supplicant, zsh - seemed important
 ## Configuring the system
 14. `genfstab -U /mnt >> /mnt/etc/fstab`
-    - honestly no idea what this did (because i do not know what UUID is)
-    - checked the output with `cat /mnt/etc/fstab`
-15. chroot into the new system
+    - Honestly no idea what this did (because i do not know what UUID is)
+    - Checked the output with `cat /mnt/etc/fstab`
+15. Chroot into the new system
     - `arch-chroot /mnt`
-    - install the packages that failed to pacstrap earlier - `pacman -S aic94xx wd719x xhci_pci`
-    - targets were not found, moving on
+    - Install the packages that failed to pacstrap earlier - `pacman -S aic94xx wd719x xhci_pci`
+    - Targets were not found, moving on
 16. Set time zone
     - `timedatectl list-timezones` to list the timezones
         - using America/Chicago
@@ -124,17 +124,68 @@ Using VMware Workstation Pro
     - `nano /etc/locale.gen`
         - uncommented `en_US.UTF-8 UTF-8` and `en_US ISO-8859-1` to allow them to be used
     - `locale-gen` to generate the locales
-    - check the locale configuration
+    - Check the locale configuration
         - `cat /etc/locale.conf
         - did not exist
-    - create the locale configuration and set the language
-        - `echo "Lang=en_US.UTF-8" > /etc/locale.conf`
+    - Create the locale configuration and set the language
+        - `echo "LANG=en_US.UTF-8" > /etc/locale.conf`
         - `cat /etc/locale.conf` to check that I did it right
-
-
-
-
-
-
-
-[link](url)
+    - No need to make the console keyboard layout persistent, since it was not modified
+18. Set the hostname configurations
+    - `cat /etc/hostname` to check the hostnames file (did not exist)
+    - `echo LocalHost > /etc/hostname`
+        - Not actually sure why this is needed, but I did it anyways, I chose my hostname to be `LocalHost`
+    - Modify hosts to include corresponding entried
+        - `nano /etc/hosts`
+        - `127.0.0.1       localhost`
+        - `::1             localhost`
+        - `127.0.1.1       LocalHost`
+19. Configure the network
+    - Check that it is currently working with `ip addr show` (it was)
+    - `pacman -S networkmanager`
+        - Install `networkmanager`
+    - Enable networkmanager: `systemctl enable NetworkManager.service`
+        - Credit to some folks on [this arch forum](https://bbs.archlinux.org/viewtopic.php?id=213914) for providing the commands I never would have found on my own
+    - Start networkmanager: `systemctl start NetworkManager.service`
+20. Initramfs
+    - Should have implicitly been done when I ran  pacstrap on the kernel (linux)
+21. Set the root password
+    - `passwd`
+22. Install the bootloader
+    - `grub-install --target=amd64 /dev/sda`
+        - `grub-install` was not found
+    - `pacman -S grub`
+        - Now I can re-run: `grub-install --target=amd64 /dev/sda`
+    - amd64 was not a valid target, valid targets were `i386-efi`, `i386-pc` and `x86_64-efi`
+    - `grub-install --target=i386-pc /dev/sda`: settled on `i386-pc` after a bunch of forum reading
+  - Enable Micro-Code for AMD CPUs
+    - `pacman -S amd-ucode`
+    - `grub-mkconfig -o /boot/grub/grub.cfg`
+    - `update-grub` (just for good measure)
+        - Command not found but [this forum](https://unix.stackexchange.com/questions/111889/how-do-i-update-grub-in-arch-linux) says that `update-grub` is just a script which would run the previous command
+23. Additional installs
+    - `pacman -S sudo`
+24. Exit the chroot, and check that no partitions are "busy"
+    - `exit`
+    - `umount -R /mnt`
+25. Reboot
+    - `reboot`
+    - It booted to the CD/DVD drive
+        - Shut down the VM and "removed" the install iso
+    - Failed to find the bootloader
+        - Found out it's set to go to the CDROM second, so I don't need to remove it next time
+        - Boot to CDROM and try re-installing grub
+26. Second attempt to install the boot loader
+    - `mount /dev/sda2 /mnt`
+    - `mount /dev/sda1 /mnt/efi`
+    - `arch-chroot /mnt`
+    - `grub-install /dev/sda`
+        - Could not find EFI directory
+        - Keeping in mind that I am in the chroot
+        - `mkdir /EFI`
+        - `mount /dev/sda1 /EFI`
+        - Re-running the grub install command
+        - Same issue
+        - Following instructions from [this forum](https://bbs.archlinux.org/viewtopic.php?id=252051) - mount it to `/mnt/boot/efi` (from inside chroot, it will be `/boot/efi`)
+        - Rerun the grub install command
+        - This time it said that `efibootmgr` was not found
