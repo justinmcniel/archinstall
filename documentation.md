@@ -83,9 +83,53 @@ Using VMware Workstation Pro
     - `mount /dev/sda1 /mnt/efi`
         - mount point did not exist, fixed with `mkdir /mnt/efi` then rerunning the mount command
 # Begin Installation of Arch
-13. 
-
-
+13. Install the "essentials"
+    - `pacstrap /mnt base linux linux-firmware`
+    - technically speaking you can ommit the firmware, since it's a VM, but I want to install as if it was on a real machine
+  1. Install filesystem management things
+    - `pacstrap /mnt btrfs-progs dosfstools exfatprogs f2fs-tools e2fsprogs jfsutils nilfs-utils ntfs-3g reiserfsprogs udftools xfsprogs` 
+    - recieved warning about possibly missing firmware for the following modules: `aic94xx` `wd719x` `xhci_pci`
+      - ran `pacstrap /mnt aic94xx wd719x xhci_pci` in an attempt to fix it
+      - targets were not found, will install with `pacman` after using arch-chroot
+  2. Install text editors
+    - `pacstrap /mnt nano gedit`
+    - also installed all the dependencies
+  3. Install networking utilities/software
+    - `pacstrap /mnt iputils systemd-resolved systemd-networkd net-tools iproute2 systemd dhcpcd dhclient`
+    - got errors relating to `systemd-resolved` and `systemd-networkd`, rerunning the previous command with those removed
+    - iputils, iproute, and systemd were reinstalled, so removing those too (since they were already installed they were not needed in the first place)
+    - `pacstrap /mnt net-tools dhcpcd dhclient`
+  4. Install `parted` and documentation tools
+    - `pacstrap /mnt gparted parted man-db man-pages`
+  5. Install various other desired packages
+    - `pacstrap /mnt memtest86+ openssh sudo syslinux wpa_supplicant zsh`
+    - memtest86+ - I use similar tools (and recognize this one) on my hardware, so it would be usefull to have
+    - sudo, syslinux, wpa_supplicant, zsh - seemed important
+## Configuring the system
+14. `genfstab -U /mnt >> /mnt/etc/fstab`
+    - honestly no idea what this did (because i do not know what UUID is)
+    - checked the output with `cat /mnt/etc/fstab`
+15. chroot into the new system
+    - `arch-chroot /mnt`
+    - install the packages that failed to pacstrap earlier - `pacman -S aic94xx wd719x xhci_pci`
+    - targets were not found, moving on
+16. Set time zone
+    - `timedatectl list-timezones` to list the timezones
+        - using America/Chicago
+    - `ln -sf /usr/share/zoneinfo/America/Chicago /etc/localtime`
+        - create a symbolic link that links local time to `America/Chicago`
+    - `hwclock --systohc`
+        - generates `/etc/adjtime`
+17. Set localization
+    - `nano /etc/locale.gen`
+        - uncommented `en_US.UTF-8 UTF-8` and `en_US ISO-8859-1` to allow them to be used
+    - `locale-gen` to generate the locales
+    - check the locale configuration
+        - `cat /etc/locale.conf
+        - did not exist
+    - create the locale configuration and set the language
+        - `echo "Lang=en_US.UTF-8" > /etc/locale.conf`
+        - `cat /etc/locale.conf` to check that I did it right
 
 
 
