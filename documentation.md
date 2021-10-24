@@ -227,3 +227,13 @@ Using VMware Workstation Pro
     - Continuing as `root` in `/` directory
     - `pacman -S cinnamon gnome-terminal`
     - `pacman -S xorg lightdm lightdm-gtk-greeter`
+    - Enable lightdm: `systemctl enable lightdm`
+    - Reboot and login: `reboot`
+31. Finishing up required steps
+    - Install zsh: `pacman -S zsh`
+    - Install OpenSSH: `pacman -S openssh`ssh
+    - Setting aliases: `alias [alias]=[old thing]`: ie. `alias install='pacman -S'` (though that example didn't seem to work right)
+32. Desktop customizations
+    - `sudo pacman -S pulseaudio pulseaudio-alsa pavucontrol firefox vlc gimp xfburn thunderbird gnome-system-monitor`
+    - `sudo pacman -S faenza-icon-theme`
+    - `yay -S numix-gtk-theme`
