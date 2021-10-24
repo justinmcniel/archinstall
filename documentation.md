@@ -189,3 +189,41 @@ Using VMware Workstation Pro
         - Following instructions from [this forum](https://bbs.archlinux.org/viewtopic.php?id=252051) - mount it to `/mnt/boot/efi` (from inside chroot, it will be `/boot/efi`)
         - Rerun the grub install command
         - This time it said that `efibootmgr` was not found
+        - `pacman -S efibootmgr` (on the advice from [thisforum](https://bbs.archlinux.org/viewtopic.php?id=169025))
+        - Rerun the grub install command, this time it worked
+    - Reboot... IT WORKED!!!!!
+# Customizing Arch
+27. Installing a GUI
+    - Choice was Cinnamon
+        - It's what I'm used to from Linux Mint
+        - It's an AUR package, so it also counts as installing an AUR package
+    - Make sure the system is up to date
+        - `pacman -Syu`
+    - Install `yay AUR Helper`
+        - `pacman -S base-devel git`: installs some installation prerequisites
+      - `cd /opt`
+      - `sudo git clone hhtps://aur.archlinux.org/yay.git`
+      - `sudo chown -R root:root ./yay`
+      - `cd yay`
+      - `makepkg -si`
+        - Not allowed as root, creating my other user now
+28. Adding other users
+    - `adduser [username]`
+      - The correct command was `useradd`
+      - To add them to superusers: `usermod -aG wheel [username]` (did not work)
+      - Set the password: `passwd [username]` (done without chaning out of root)
+      - `pacman -S vi` followed by `visudo` then uncommenting the line `%wheel ALL=(ALL) ALL` to enable sudo access for the wheel group
+      - Installing sudo: `pacman -S sudo`
+      - Set password to change after login (for codi and sal): `passwd --expire [username]`
+    - To show sudoers: `cat /etc/group | grep wheel`
+    - Set ownership of users home directory: `chown -R [username]: /home/[username]
+29. Back to installing yay
+    - Needed write permissions on the directory: `chmod 764 ./PKGBUILD` then `chown -R [username]:wheel ./`
+    - `su [username]`
+    - `makepkg -si`
+      - Failed to get permission for `/home/[username]` with mkdir, doing it manually with `mkdir -p /home/[username]/.cache/go-build`
+      - One of the scripts in this command forgot the `-p` after `mkdir` so I have to make the directories manually
+30. Continuing installation of cinnamon
+    - Continuing as `root` in `/` directory
+    - `pacman -S cinnamon gnome-terminal`
+    - `pacman -S xorg lightdm lightdm-gtk-greeter`
